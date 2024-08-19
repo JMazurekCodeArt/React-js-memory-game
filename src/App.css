@@ -1,5 +1,4 @@
-/* App.css */
-
+/* Główne style aplikacji */
 .App {
   text-align: center;
   background: url('/public/background-memory.png') no-repeat center center fixed;
@@ -10,24 +9,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
 h1 {
   margin-top: 20px;
-  color: #fff; /* Kolor tekstu nagłówka */
+  color: rgb(37, 106, 180);
 }
 
-.counters {
-  margin-bottom: 20px; /* Odstęp między licznikami a planszą */
-  color: #fff; /* Kolor tekstu liczników */
+/* Style liczby par */
+.pairs {
+  text-align: center;
+  font-size: 240px;
+  font-weight: bold;
+  color: rgb(37, 106, 180);
+  margin: 0px;
+  margin-top: -100px;
 }
 
-p {
-  margin: 5px 0;
-  font-size: 1.2em; /* Większa czcionka dla liczników */
-}
-
-/* Board styles */
+/* Style planszy */
 .board {
   display: grid;
   grid-template-columns: repeat(6, 100px); /* 6 kolumn */
@@ -36,7 +37,12 @@ p {
   justify-content: center;
 }
 
-/* Tile styles */
+.score-board {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Style kafelków */
 .tile {
   width: 100px;
   height: 100px;
@@ -86,10 +92,133 @@ p {
 .tile.flipped .tile-cover {
   transform: translateY(-100%) translateX(100%); /* Przesuwa przykrywkę poza planszę */
   z-index: 0; /* Ustawia przykrywkę poniżej zawartości */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Dodaje cień */
 }
 
 .tile.flipped .tile-content {
   transform: translateZ(0); /* Ustawia zawartość na wierzchu */
   z-index: 1; /* Ustawia zawartość nad przykrywką */
+}
+
+/* Style tablicy wyników */
+.score-board {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.pairs {
+  font-size: 240px;
+  margin-bottom: 10px;
+}
+
+/* Style gwiazdek */
+.stars {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  display: flex;
+}
+
+.star {
+  width: 100px;
+  height: 100px;
+  background-color: rgb(33, 121, 214);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  margin: 15px;
+  z-index: 2;
+}
+
+.star.active {
+  background-color: rgb(247, 185, 42);
+}
+
+
+.black-stars {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  display: flex;
+}
+
+.black-star {
+  width: 130px;
+  height: 130px;
+  background-color: rgb(0, 0, 0);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.black-pointsX {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  display: flex;
+}
+
+.black-pointX {
+  width: 130px;
+  height: 130px;
+  background-color: rgb(0, 0, 0);
+  clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);  margin-left: 15px;
+}
+
+.pointsX {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  display: flex;
+}
+
+.pointX {
+  width: 100px;
+  height: 100px;
+  background-color: rgb(33, 121, 214);
+  clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);  margin-left: 15px;
+  margin: 15px;
+  margin-left: 30px;
+}
+
+.pointX.active {
+  background-color: rgb(255, 25, 25);
+}
+
+.game-over-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.game-over {
+  position: absolute;
+  background-repeat: no-repeat;
+  width: 1080px;
+  bottom: 00%;
+  left: 50%;
+  transform: translate(-50%);
+  text-align: center;
+  background-image: url('/public/page.png') ;
+  padding: 20px;
+  border-radius: 10px;
+  color: rgb(39, 39, 39);
+  cursor: auto;
+  z-index: 3;
+  margin: 0 auto;
+}
+
+.game-over h1 {
+  font-size: 72px;
+  margin-top: 90px;
+}
+
+.game-over p {
+  font-size: 36px;
+  margin-top: 80px;
+}
+
+.game-over h2 {
+  font-size: 32px;
+}
+
+.game-over h2:hover {
+  color: rgb(118, 154, 185);
+  cursor: pointer;
 }

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import './App.css';
 
-// Lista obrazków (12 par)
 const images = [
   '/fish.png',
   '/spaghetti.png',
@@ -46,23 +45,31 @@ const App = () => {
   const [pairsCount, setPairsCount] = useState(0);
   const [mistakesCount, setMistakesCount] = useState(0);
   const [showingAll, setShowingAll] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
-    // Inicjalizacja planszy
+    startGame();
+  }, []);
+
+  const startGame = () => {
     const shuffledTiles = shuffleArray(images);
     setTiles(shuffledTiles);
+    setFlippedTiles([]);
+    setMatchedPairs([]);
+    setPairsCount(0);
+    setMistakesCount(0);
+    setGameOver(false);
+    setShowingAll(true);
 
-    // Pokazanie wszystkich kafelków przez 5 sekund
     const timer = setTimeout(() => {
       setShowingAll(false);
     }, 5000);
 
-    // Sprzątanie
     return () => clearTimeout(timer);
-  }, []);
+  };
 
   const handleTileClick = (index) => {
-    if (flippedTiles.length === 2 || flippedTiles.includes(index) || matchedPairs.includes(index) || showingAll) {
+    if (gameOver || flippedTiles.length === 2 || flippedTiles.includes(index) || matchedPairs.includes(index) || showingAll) {
       return;
     }
 
@@ -73,34 +80,78 @@ const App = () => {
       const [firstIndex, secondIndex] = newFlippedTiles;
       if (tiles[firstIndex] === tiles[secondIndex]) {
         setMatchedPairs([...matchedPairs, firstIndex, secondIndex]);
-        setPairsCount(pairsCount + 1); // Zwiększ licznik par
+        setPairsCount(pairsCount + 1);
       } else {
-        setMistakesCount(mistakesCount + 1); // Zwiększ licznik pomyłek
+        setMistakesCount(mistakesCount + 1);
+        if (mistakesCount === 2) {
+          setGameOver(true);
+        }
       }
 
       setTimeout(() => {
         setFlippedTiles([]);
+        if (pairsCount === 11) {
+          setGameOver(true); // All pairs are matched
+        }
       }, 1000);
     }
   };
 
+  const getStars = () => {
+    if (pairsCount >= 8) return 3; // Assuming 12 is the maximum pairs for 3 stars
+    if (pairsCount >= 6) return 2;
+    if (pairsCount >= 3) return 1;
+    return 0;
+  };
+
+  const getPointsX = () => mistakesCount;
+
   return (
     <div className="App">
-      <h1>Memory Game</h1>
-      <div className="counters">
-        <p>Pairs: {pairsCount}</p>
-        <p>Mistakes: {mistakesCount}</p>
+      <div className="score-board">
+        <p className="pairs">{pairsCount}</p>
+        <div className="stars">
+          {[...Array(3).keys()].map(i => (
+            <div key={i} className={`star ${getStars() > i ? 'active' : ''}`}></div>
+          ))}
+        </div>
+        <div className="black-stars">
+          {[...Array(3).keys()].map(i => (
+            <div key={i} className="black-star"></div>
+          ))}
+        </div>
+        <div className="pointsX">
+          {[...Array(3).keys()].map(i => (
+            <div key={i} className="black-pointX"></div>
+          ))}
+        </div>
+        <div className="black-pointsX">
+          {[...Array(3).keys()].map(i => (
+            <div key={i} className={`pointX ${getPointsX() > i ? 'active' : ''}`}></div>
+          ))}
+        </div>
       </div>
       <div className="board">
-        {tiles.map((image, index) => (
+        {tiles.map((tile, index) => (
           <Tile
             key={index}
-            image={image}
-            isFlipped={showingAll || flippedTiles.includes(index) || matchedPairs.includes(index)}
-            onClick={() => handleTileClick(index)}
+            index={index}
+            tile={tile}
+            flipped={flippedTiles.includes(index) || matchedPairs.includes(index) || showingAll}
+            onClick={handleTileClick}
           />
         ))}
       </div>
+      {gameOver && (
+        <div classname="game-over-container">
+          <div className="game-over">
+            <h1>Game Over!</h1>
+            <p>Play again!</p>
+            <h2 onClick={startGame}>RESTART</h2>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
